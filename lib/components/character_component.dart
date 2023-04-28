@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -60,7 +59,7 @@ class _CharacterComponentState extends State<CharacterComponent> {
                 children: [
                   Chip(
                       label: Text('${character.status}'),
-                      backgroundColor: Color.fromRGBO(172, 123, 100, 0.6)),
+                      backgroundColor: Color.fromRGBO(240, 225, 74, 0.5)),
                   const SizedBox(width: 4.0),
                   Chip(
                       label: Text('${character.species}'),
@@ -73,10 +72,13 @@ class _CharacterComponentState extends State<CharacterComponent> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(50)),
-                child: Image.network(
-                  character.image!,
+                child: FadeInImage(
+                  placeholderFit: BoxFit.fitHeight,
                   height: 100,
                   width: 100,
+                  image: NetworkImage(character.image),
+                  placeholder:
+                      const AssetImage('assets/images/fallback_rick.png'),
                 ),
               )
             ],
