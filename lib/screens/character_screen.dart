@@ -54,54 +54,62 @@ class _CharacterScreenState extends State<CharacterScreen> {
                 image: AssetImage('assets/images/fallback_rick.png'),
                 fit: BoxFit.contain,
                 opacity: 0.2)),
-        child: Column(children: [
-          Container(
-            margin: const EdgeInsets.only(top: 20, left: 10),
-            alignment: Alignment.center,
-            child: const Text(
-              'Rick and Morty',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(12),
-            child: const Text(
-              'Rick and Morty Finder book check here the status of your favorite character',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color.fromRGBO(242, 242, 242, 0.6)),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(24),
-                        isDense: true,
-                        hintText: 'Search characters',
-                        border:
-                            OutlineInputBorder(borderSide: BorderSide.none)),
-                  ),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(children: [
+              Container(
+                margin: const EdgeInsets.only(top: 20, left: 10),
+                alignment: Alignment.center,
+                child: const Text(
+                  'Rick and Morty',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
                 ),
-              )
-            ],
+              ),
+              Container(
+                padding: const EdgeInsets.all(12),
+                child: const Text(
+                  'Rick and Morty Finder book check here the status of your favorite character',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Color.fromRGBO(242, 242, 242, 0.6)),
+                      child: TextField(
+                        onChanged: (value) {
+                          print(value);
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(24),
+                            isDense: true,
+                            hintText: 'Search characters',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide.none)),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              if (loading) CircularProgressIndicator(),
+              if (provider.isNotEmpty)
+                Container(
+                    margin: EdgeInsets.only(top: 10),
+                    height: 550,
+                    child: ListView.builder(
+                      itemCount: provider.length,
+                      itemBuilder: (context, index) {
+                        return CharacterComponent(character: provider[index]);
+                      },
+                    ))
+            ]),
           ),
-          if (loading) CircularProgressIndicator(),
-          if (provider.isNotEmpty)
-            Container(
-                height: 550,
-                child: ListView.builder(
-                  itemCount: provider.length,
-                  itemBuilder: (context, index) {
-                    return CharacterComponent(character: provider[index]);
-                  },
-                ))
-        ]),
+        ),
       ),
     );
   }
