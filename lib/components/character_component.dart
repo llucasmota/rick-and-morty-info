@@ -2,33 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:rick_morty_app/model/character.dart';
+import 'package:rick_morty_app/model/characters_list.dart';
 
-class CharacterComponent extends StatefulWidget {
-  const CharacterComponent({super.key});
-
-  @override
-  State<CharacterComponent> createState() => _CharacterComponentState();
-}
-
-class _CharacterComponentState extends State<CharacterComponent> {
-  late Character character;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    http
-        .get(Uri.parse('https://rickandmortyapi.com/api/character/2'))
-        .then((value) {
-      print(Character.fromJson(jsonDecode(value.body)).toJson());
-      character = Character.fromJson(jsonDecode(value.body));
-    });
-  }
+class CharacterComponent extends StatelessWidget {
+  CharacterComponent({super.key, required this.character});
+  final Character character;
 
   @override
   Widget build(BuildContext context) {
+    // Provider.of<CharactersList>(context).;
+
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
@@ -59,7 +44,11 @@ class _CharacterComponentState extends State<CharacterComponent> {
                 children: [
                   Chip(
                       label: Text('${character.status}'),
-                      backgroundColor: Color.fromRGBO(240, 225, 74, 0.5)),
+                      backgroundColor: character.status == 'Alive'
+                          ? Colors.greenAccent[400]
+                          : character.status == 'Dead'
+                              ? Colors.red[400]
+                              : Colors.white),
                   const SizedBox(width: 4.0),
                   Chip(
                       label: Text('${character.species}'),
