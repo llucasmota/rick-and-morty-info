@@ -1,15 +1,47 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:provider/provider.dart';
 import 'package:rick_morty_app/components/character_component.dart';
+import 'package:rick_morty_app/model/characters_list.dart';
+import 'package:http/http.dart' as http;
+import 'package:rick_morty_app/utils/contants.dart';
 
-class CharacterScreen extends StatelessWidget {
+class CharacterScreen extends StatefulWidget {
   const CharacterScreen({super.key});
 
   @override
+  State<CharacterScreen> createState() => _CharacterScreenState();
+}
+
+class _CharacterScreenState extends State<CharacterScreen> {
+  bool loading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      loading = true;
+    });
+    Provider.of<CharactersList>(context, listen: false)
+        .loadCharacters()
+        .then((value) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<CharactersList>(context, listen: true).results;
+
     return Scaffold(
       appBar: AppBar(
+        title: Text('Rick And Morty'),
         actions: [],
         backgroundColor: const Color.fromRGBO(151, 206, 76, 0.9),
         elevation: 10,
@@ -59,9 +91,16 @@ class CharacterScreen extends StatelessWidget {
               )
             ],
           ),
-          Column(
-            children: const [CharacterComponent()],
-          )
+          if (loading) CircularProgressIndicator(),
+          if (provider.isNotEmpty)
+            Container(
+                height: 550,
+                child: ListView.builder(
+                  itemCount: provider.length,
+                  itemBuilder: (context, index) {
+                    return CharacterComponent(character: provider[index]);
+                  },
+                ))
         ]),
       ),
     );
