@@ -21,12 +21,35 @@ class CharactersList with ChangeNotifier {
 
   Map<String, dynamic> toJson() => _$CharactersListToJson(this);
 
-  Future<void> loadCharacters() async {
-    final response = await http.get(Uri.parse(Constants.CHARACTERS));
+  Future<void> loadCharacters([String? queryParams]) async {
+    String url = '${Constants.CHARACTERS}';
+
+    if (queryParams != null) {
+      url = queryParams;
+    }
+    final response = await http.get(Uri.parse(url));
     final characters = CharactersList.fromJson(jsonDecode(response.body));
     results = characters.results;
+
     info = characters.info;
+    print(url += '?${info?.next}');
     print('info-characters: ${characters.info?.count}');
     print('character-result: ${response.body}');
+    notifyListeners();
+  }
+
+  Future<void> forward() async {
+    if (info?.next == null) {
+      return;
+    }
+
+    await loadCharacters(info!.next!);
+  }
+
+  Future<void> prev() async {
+    if (info?.prev == null) {
+      return;
+    }
+    await loadCharacters(info!.prev!);
   }
 }
