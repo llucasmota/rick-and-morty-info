@@ -12,8 +12,6 @@ class CharacterComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Provider.of<CharactersList>(context).;
-
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
