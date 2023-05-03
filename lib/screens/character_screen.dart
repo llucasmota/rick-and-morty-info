@@ -35,6 +35,28 @@ class _CharacterScreenState extends State<CharacterScreen> {
     });
   }
 
+  Future<void> next() async {
+    setState(() {
+      loading = true;
+    });
+    Provider.of<CharactersList>(context, listen: false).forward().then((value) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  Future<void> prev() async {
+    setState(() {
+      loading = true;
+    });
+    Provider.of<CharactersList>(context, listen: false).prev().then((value) {
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<CharactersList>(context, listen: true).results;
@@ -42,7 +64,18 @@ class _CharacterScreenState extends State<CharacterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Rick And Morty'),
-        actions: [],
+        actions: [
+          OutlinedButton.icon(
+            onPressed: prev,
+            icon: Icon(Icons.arrow_back, color: Colors.indigo),
+            label: Text(''),
+          ),
+          OutlinedButton.icon(
+            onPressed: next,
+            icon: Icon(Icons.arrow_forward, color: Colors.indigo),
+            label: Text(''),
+          )
+        ],
         backgroundColor: const Color.fromRGBO(151, 206, 76, 0.9),
         elevation: 10,
       ),
@@ -93,6 +126,34 @@ class _CharacterScreenState extends State<CharacterScreen> {
                                 borderSide: BorderSide.none)),
                       ),
                     ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: prev,
+                    child: Text(
+                      'Previous Page',
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        padding: EdgeInsets.all(10),
+                        fixedSize: Size.fromWidth(150)),
+                  ),
+                  ElevatedButton(
+                    onPressed: next,
+                    child: Text(
+                      'Next Page',
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        padding: EdgeInsets.all(10),
+                        fixedSize: Size.fromWidth(150)),
                   )
                 ],
               ),
